@@ -240,7 +240,7 @@ MERGE (e)-[:SCORED]->(sc)
             }
         }
     }
-    if let Err(e) = tx.execute(q).await {
+    if let Err(e) = tx.run(q).await {
         tracing::error!("💥 Erro ao executar Cypher: {e}");
         return Err(e);
     }
