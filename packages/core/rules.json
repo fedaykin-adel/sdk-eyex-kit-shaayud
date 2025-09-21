@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "default": 0,
+  "rules": [
+    {
+      "id": "new_device_for_identity",
+      "when": { "all": [
+        {"eq": ["event.type", "page_view"]},
+        {"gt": ["feat.identity_known_devices_recent", 0]},
+        {"eq": ["feat.is_new_device_for_identity", true]}
+      ]},
+      "score": 25,
+      "desc": "Novo device visto para esta identidade"
+    },
+    {
+      "id": "ip_country_changed_in_session",
+      "when": { "all": [
+        {"eq": ["feat.session_ip_country_changed", true]}
+      ]},
+      "score": 35,
+      "desc": "País do IP mudou dentro da mesma sessão"
+    },
+    {
+      "id": "ua_suspicious",
+      "when": { "any": [
+        {"eq": ["event.ua_empty", true]},
+        {"regex": ["event.user_agent", "(Headless|bot|crawler)"]}
+      ]},
+      "score": 15,
+      "desc": "User-Agent suspeito"
+    },
+    {
+      "id": "mouse_batch_present",
+      "when": { "all": [
+        {"eq": ["event.type", "mouse_batch"]},
+        {"gt": ["feat.mouse_points_len", 120]}
+      ]},
+      "score": -10,
+      "desc": "Presença de mouse real (reduz risco)"
+    },
+    {
+      "id": "front_sensitive_path",
+      "when": { "regex": ["event.front_path", "(/login|/checkout|/reset)"] },
+      "score": 5,
+      "desc": "Rota sensível (peso leve)"
+    }
+  ]
+}

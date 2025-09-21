@@ -1,15 +1,25 @@
 version: "3.8"
 services:
-  postgres:
-    image: postgres:16
-    container_name: shaayud_db
+  neo4j:
+    image: neo4j:5.20
+    container_name: neo4j-apoc
     ports:
-      - "5432:5432"
+      - 7474:7474     # Interface web
+      - 7687:7687     # Bolt protocol (usado pelo SDK em Rust)
     environment:
-      POSTGRES_USER: shaayud
-      POSTGRES_PASSWORD: secret
-      POSTGRES_DB: shaayud
+      NEO4J_AUTH: neo4j/teste1234
+      NEO4J_PLUGINS: '["apoc"]'
+      NEO4J_dbms_security_procedures_unrestricted: 'apoc.*'
+      NEO4J_dbms_security_procedures_allowlist: 'apoc.*'
+      NEO4J_apoc_import_file_enabled: 'true'
+      NEO4J_apoc_export_file_enabled: 'true'
+      NEO4J_apoc_import_file_use__neo4j__config: 'true'
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+      - ./import:/import  # Pasta local para import/export de arquivos
+
 volumes:
+  neo4j_data:
+  neo4j_logs:
   pgdata:

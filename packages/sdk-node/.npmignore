@@ -1,0 +1,10 @@
+# Ignorar tudo que não é necessário
+src/
+tsconfig.json
+tsconfig.build.json
+*.ts
+*.md
+*.tgz
+node_modules/
+tests/
+.vscode/

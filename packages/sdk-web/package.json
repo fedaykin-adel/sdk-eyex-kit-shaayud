@@ -1,16 +1,43 @@
 {
   "name": "@shaayud/sdk-web",
   "version": "0.1.0",
-  "main": "index.js",
   "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./provider": {
+      "types": "./dist/provider.d.ts",
+      "import": "./dist/provider.js",
+      "require": "./dist/provider.js"
+    }
+  },
   "files": [
-    "index.js",
-    "package.json"
+    "dist"
   ],
+  "sideEffects": false,
   "scripts": {
-    "pack": "npm pack"
+    "build": "tsup src/index.ts src/provider.tsx --format esm,cjs --dts --target es2018 --sourcemap --clean",
+    "clean": "rm -rf dist",
+    "prepack": "npm run clean && npm install && rm -rf shaayud-sdk-node-1.0.0.tgz && npm run build",
+    "pack": "npm run prepack && npm pack"
   },
   "dependencies": {
-    "@fingerprintjs/fingerprintjs": "^3.4.1"
+    "@fingerprintjs/fingerprintjs": "^3.4.1",
+    "pako": "^2.1.0",
+    "react": "^19.1.1"
+  },
+  "devDependencies": {
+    "@types/pako": "^2.0.4",
+    "@types/react": "^19.1.13",
+    "@types/react-dom": "^19.1.9",
+    "rimraf": "^6.0.1",
+    "tsup": "^8.0.1",
+    "typescript": "^5.5.4"
   }
 }

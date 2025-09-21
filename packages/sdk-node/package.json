@@ -1,0 +1,34 @@
+{
+  "name": "@shaayud/sdk-node",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    }
+  },
+  
+  "files": ["dist"],
+
+  "scripts": {
+    "build": "npx tsc --project tsconfig.json --pretty",
+    "clean": "rm -rf dist",
+    "prepack": "npm run clean && npm install && rm -rf shaayud-sdk-node-1.0.0.tgz && npm run build",
+    "pack": "npm run prepack && npm pack"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@shaayud/sdk-core": "file:/home/adel/project/shaarimkodeeb/shaayud/packages/ffi/shaayud-sdk-core-0.1.1.tgz",
+    "geoip-lite": "^1.4.10"
+  },
+  "devDependencies": {
+    "@types/geoip-lite": "^1.4.4",
+    "@types/node": "^24.1.0",
+    "typescript": "^5.8.3"
+  }
+}

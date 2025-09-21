@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES2018",
+    "module": "ES2020",
+    "moduleResolution": "Node",
+    "lib": ["ES2018", "DOM", "DOM.Iterable"],
+    "rootDir": "src",
+    "outDir": "dist",
+    "declaration": true,
+    "sourceMap": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+
+    // ✅ necessário pra .tsx compilar
+    "jsx": "react-jsx",
+
+    // ✅ inclui tipos do React (não deixe só "node")
+    "types": ["node", "react", "react-dom"]
+  },
+  "include": ["src/**/*"]
+}
