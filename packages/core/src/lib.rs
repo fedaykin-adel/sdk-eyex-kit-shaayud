@@ -203,7 +203,7 @@ SET e.score = $score_total
 
 WITH e
 CREATE (sc:Score {
-  id: apoc.create.uuid(),
+  id: randomUUID(),
   total: $score_total,
   matched: $score_matched,
   at: datetime()
@@ -240,7 +240,7 @@ MERGE (e)-[:SCORED]->(sc)
             }
         }
     }
-    if let Err(e) = tx.execute(q).await {
+    if let Err(e) = tx.run(q).await {
         tracing::error!("💥 Erro ao executar Cypher: {e}");
         return Err(e);
     }
