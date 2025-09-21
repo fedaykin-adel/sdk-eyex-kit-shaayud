@@ -21,21 +21,42 @@ use shaayud_core::structs::eventos::EventoInput;
 // #[shaayud_export]
 #[napi]
 pub fn ingest(input: String) -> Result<String> {
+    println!("📥 ingest() input bruto: {}", input);
+
     let data: EventoInput = serde_json::from_str(&input)
         .map_err(|e| Error::from_reason(format!("Invalid input: {}", e)))?;
 
-    // recive_data(data);
-    let client = reqwest::blocking::Client::new();
+    // Se EventoInput não tiver Debug, troque por:
+    // println!("✅ EventoInput parseado: {}", serde_json::to_string(&data).unwrap());
+    println!("✅ EventoInput parseado: {:?}", data);
+
+    let client = reqwest::blocking::Client::builder()
+        .timeout(std::time::Duration::from_secs(10))
+        .build()
+        .map_err(|e| Error::from_reason(format!("Client build error: {e}")))?;
+
     let res = client
-        .post("http://localhost:6666/ingest")
+        .post("https://sdk-backend-flame.vercel.app/api/ingest")
+        .header("content-type", "application/json")
         .json(&data)
         .send()
-        .map_err(|e| Error::from_reason(format!("HTTP error: {}", e)))?;
+        .map_err(|e| Error::from_reason(format!("HTTP error: {e}")))?;
 
-    if !res.status().is_success() {
+    // ✅ capture antes de consumir com `text()`
+    let status = res.status();
+    // (opcional) se quiser headers para log:
+    // let headers = res.headers().clone();
+
+    // `text()` move `res`, então faça por último:
+    let body_text = res.text().unwrap_or_else(|_| "<sem corpo>".to_string());
+
+    println!("🌐 Status: {}", status);
+    // println!("🧾 Headers: {:?}", headers);
+    println!("📩 Corpo da resposta: {}", body_text);
+
+    if !status.is_success() {
         return Err(Error::from_reason(format!(
-            "Failed with status: {}",
-            res.status()
+            "Failed with status: {status}, body: {body_text}"
         )));
     }
 
