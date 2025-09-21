@@ -11,7 +11,7 @@ pub struct Viewport {
 pub struct Click {
     pub x: i32,
     pub y: i32,
-    pub t: i32,
+    pub t: i64,
     pub b: i32,
 }
 #[derive(Debug, Deserialize, Serialize)]

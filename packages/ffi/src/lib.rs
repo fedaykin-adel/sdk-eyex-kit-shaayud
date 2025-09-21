@@ -22,7 +22,27 @@ use shaayud_core::structs::eventos::EventoInput;
 #[napi]
 pub fn ingest(input: String) -> Result<String> {
     println!("📥 ingest() input bruto: {}", input);
+    let mut v: serde_json::Value = serde_json::from_str(&input)
+        .map_err(|e| Error::from_reason(format!("Invalid input: {e}")))?;
 
+    fn ms_to_s(x: &mut serde_json::Value) {
+        if let Some(n) = x.as_i64() {
+            if n > i64::from(i32::MAX) {
+                *x = serde_json::Value::from((n / 1000) as i32);
+            }
+        }
+    }
+    if let Some(obj) = v.as_object_mut() {
+        if let Some(t) = obj.get_mut("timestamp") {
+            ms_to_s(t);
+        }
+        if let Some(t) = obj.get_mut("ts_start") {
+            ms_to_s(t);
+        }
+        if let Some(t) = obj.get_mut("ts_end") {
+            ms_to_s(t);
+        }
+    }
     let data: EventoInput = serde_json::from_str(&input)
         .map_err(|e| Error::from_reason(format!("Invalid input: {}", e)))?;
 
